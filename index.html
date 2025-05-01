@@ -135,7 +135,6 @@
 
     // 카카오맵 초기화
     function initMap() {
-        alert("init 함수 진입");
         navigator.geolocation.getCurrentPosition(
             position => {
                 let lat = position.coords.latitude;
@@ -145,7 +144,6 @@
                 let options = { center: new kakao.maps.LatLng(lat, lng), level: 3 };
                 map = new kakao.maps.Map(container, options);
 
-                alert("lat, lng 추출");
                 getGyms(lat, lng);
             }
         );
@@ -153,23 +151,21 @@
 
     // 백엔드에 헬스장 정보 요청
     function getGyms(lat, lng, keyword = "") {
-        alert("getGyms 함수 진입");
-        const url = new URL('http://localhost:8080/api/gyms');
-        let params = new URLSearchParams(); // URL 파라미터 담는 JavaScript 내장 객체
+        const url = 'http://localhost:8080/api/gyms';
+        <!-- let params = new URLSearchParams(); --> // URL 파라미터 담는 JavaScript 내장 객체
+        let params = {};
 
         // 좌표가 넘어왔으면 파라미터에 좌표 추가
         if (lat && lng) {
-            params.append("x", lng);
-            params.append("y", lat);
+            params.x = lng;
+            params.y = lat;
         } else if (keyword && keyword.trim() !== "") { // 좌표 안 넘어왔으면 키워드 추가
-            params.append("keyword", keyword + " 헬스장"); // 특정 장소 검색 시, 뒤에 헬스장 붙여서 헬스장만 검색되도록 설정
+            params.keyword = keyword + " 헬스장"; // 특정 장소 검색 시, 뒤에 헬스장 붙여서 헬스장만 검색되도록 설정
         }
-
-        url.search = params.toString() // 만든 파라미터로 URL 생성
-
-        fetch(url) // 백엔드로 요청
-            .then(response => response.json())
-            .then(data => {
+        
+        axios.get(url, { params }) // 백엔드로 요청
+            .then(response => {
+                const data = response.data;
                 console.log("API 응답 데이터:", data);
 
                 markers.forEach(marker => marker.setMap(null)); // 기존 마커 제거
@@ -276,7 +272,6 @@
                 // 좌표 변환 가능하면 좌표 전달해서 좌표 기반 조회
                 let lat = result[0].y;
                 let lng = result[0].x;
-<!--                map.setCenter(new kakao.maps.LatLng(lat, lng));-->
                 getGyms(lat, lng);
             } else {
                 // 좌표 변환 못 하면 키워드 전달해서 키워드 기반 조회

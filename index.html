@@ -162,13 +162,10 @@
             params.keyword = keyword + " 헬스장"; // 특정 장소 검색 시, 뒤에 헬스장 붙여서 헬스장만 검색되도록 설정
         }
         
-        alert("axios 요청 직전");
         axios.get(url, { params }) // 백엔드로 요청
             .then(response => {
-                alert("정상 요청 완료");
                 const data = response.data;
                 console.log("API 응답 데이터:", data);
-                alert("API 응답 데이터:" + data)
 
                 markers.forEach(marker => marker.setMap(null)); // 기존 마커 제거
                 overlays.forEach(overlay => overlay.setMap(null)); // 기존 오버레이 제거
@@ -184,7 +181,6 @@
                 const filteredGyms = data.data.documents.filter(gym =>
                     gym.category_name.includes("헬스클럽")
                 );
-                alert("filtering 데이터: ", filteredGyms);
 
                 filteredGyms.forEach(gym => {
                     let markerPosition = new kakao.maps.LatLng(gym.y, gym.x); // 마커 위치
@@ -194,7 +190,6 @@
                         map: map,
                         clickable: true
                     });
-                    alert("마커 생성 성공");
 
                     // 마커 좌표를 경계에 포함
                     bounds.extend(markerPosition);

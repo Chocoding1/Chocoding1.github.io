@@ -1,20 +1,297 @@
 <!DOCTYPE html>
-<html>
 <head>
-	<meta charset="utf-8"/>
-	<title>Kakao 지도 시작하기</title>
+    <meta charset="utf-8">
+    <title>GymNaWa</title>
+    <style>
+        /* 상단 영역 스타일 */
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #ddd;
+        }
+        #header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        #header .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        #header .buttons button {
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+        #header .buttons button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* 검색창 스타일 */
+        #searchContainer {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 5px;
+        }
+        #searchKeyword {
+            width: 250px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #searchBtn {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        #searchBtn:hover {
+            background-color: #0056b3;
+        }
+
+        /* 오버레이 스타일 */
+        #map .overlay {
+        position: relative;
+        width: 250px;
+        border-radius: 8px;
+        background-color: #fff !important;    /* 불투명한 흰색 배경 */
+        border: 1px solid #ddd !important;    /* 얇은 테두리 추가 */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important; /* 부드러운 그림자 */
+        overflow: hidden;
+        z-index: 1000;                       /* 맵 위로 나오게 */
+        }
+        #map .overlay .info {
+            padding: 10px;
+        }
+        #map .overlay .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            color: #333 !important;               /* 글자색 어둡게 */
+        }
+        #map .overlay .close {
+            cursor: pointer;
+            color: #ff4d4f !important;            /* 닫기 버튼 빨간색으로 */
+        }
+        #map .overlay .close:hover {
+            color: #d9363e !important;            /* 닫기 버튼 호버 시 진하게 */
+        }
+        #map .overlay .desc {
+            font-size: 14px;
+            color: #555 !important;               /* 설명 글자 어둡게 */
+        }
+        #map .overlay .link {
+            color: #007BFF !important;            /* 링크 파란색으로 */
+            text-decoration: none !important;
+        }
+        #map .overlay .link:hover {
+            text-decoration: underline !important; /* 링크 호버 시 밑줄 */
+        }
+    </style>
 </head>
 <body>
-	<div id="map" style="width:500px;height:400px;"></div>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fc8900e906375cfbf4a437afdf395108"></script>
-	<script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 3
-		};
+<div id="header">
+    <h1>주변 헬스장을 탐색해보세요!</h1>
+    <div class="buttons">
 
-		var map = new kakao.maps.Map(container, options);
-	</script>
+    </div>
+</div>
+
+<!-- 검색창 추가 -->
+<div id="searchContainer">
+    <input type="text" id="searchKeyword" placeholder="주소를 입력하세요">
+    <button id="searchBtn" onclick="searchGym()">검색</button>
+</div>
+
+<!-- 지도를 표시할 div 입니다 -->
+<div id="map" style="width:100%;height:680px;"></div>
+
+<script type="text/javascript" th:src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fc8900e906375cfbf4a437afdf395108&libraries=services"></script>
+<!-- axios CDN 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    let map;
+    let markers = [];
+    let overlays = [];
+
+    // 카카오맵 초기화
+    function initMap() {
+        alert("init 함수 진입");
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+
+                let container = document.getElementById('map');
+                let options = { center: new kakao.maps.LatLng(lat, lng), level: 3 };
+                map = new kakao.maps.Map(container, options);
+
+                getGyms(lat, lng);
+            }
+        );
+    }
+
+    // 백엔드에 헬스장 정보 요청
+    function getGyms(lat, lng, keyword = "") {
+        const url = new URL('http://localhost:8080/api/gyms');
+        let params = new URLSearchParams(); // URL 파라미터 담는 JavaScript 내장 객체
+
+        // 좌표가 넘어왔으면 파라미터에 좌표 추가
+        if (lat && lng) {
+            params.append("x", lng);
+            params.append("y", lat);
+        } else if (keyword && keyword.trim() !== "") { // 좌표 안 넘어왔으면 키워드 추가
+            params.append("keyword", keyword + " 헬스장"); // 특정 장소 검색 시, 뒤에 헬스장 붙여서 헬스장만 검색되도록 설정
+        }
+
+        url.search = params.toString() // 만든 파라미터로 URL 생성
+
+        fetch(url) // 백엔드로 요청
+            .then(response => response.json())
+            .then(data => {
+                console.log("API 응답 데이터:", data);
+
+                markers.forEach(marker => marker.setMap(null)); // 기존 마커 제거
+                overlays.forEach(overlay => overlay.setMap(null)); // 기존 오버레이 제거
+                markers = [];
+                overlays = [];
+
+                // 인포윈도우 객체 생성
+                let infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+                // 경계 객체 생성(여러 헬스장을 포함하는 경계)
+                let bounds = new kakao.maps.LatLngBounds();
+
+                const filteredGyms = data.data.documents.filter(gym =>
+                    gym.category_name.includes("헬스클럽")
+                );
+                console.log("filtering 데이터: ", filteredGyms);
+
+                filteredGyms.forEach(gym => {
+                    let markerPosition = new kakao.maps.LatLng(gym.y, gym.x); // 마커 위치
+                    // 마커 생성
+                    let marker = new kakao.maps.Marker({
+                        position: markerPosition,
+                        map: map,
+                        clickable: true
+                    });
+                    console.log("마커 생성 성공");
+
+                    // 마커 좌표를 경계에 포함
+                    bounds.extend(markerPosition);
+
+                    // 커스텀 오버레이 컨텐츠 생성
+                    let overlayContent = `
+                        <div class="overlay">
+                            <div class="info">
+                                <div class="title">
+                                    ${gym.place_name}
+                                    <div class="close" onclick="closeOverlay()" title="닫기">X</div>
+                                </div>
+                                <div class="body">
+                                    <div class="desc">
+                                        <div>
+                                            <a href="${gym.place_url}" target="_blank" class="link">홈페이지 방문</a>
+                                        </div>
+                                        <div>
+                                            <a href="/gymtrainer/${gym.id}/trainers?placeName=${encodeURIComponent(gym.place_name)}" target="_blank" class="link">트레이너 목록</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    // 커스텀 오버레이 생성
+                    let customOverlay = new kakao.maps.CustomOverlay({
+                        content: overlayContent,
+                        position: markerPosition,
+                        map: null // 처음엔 숨겨둠
+                    });
+
+                    // 마커 클릭 이벤트
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        // 기존 오버레이 닫기
+                        overlays.forEach(overlay => overlay.setMap(null));
+                        customOverlay.setMap(map);
+                    });
+
+                    // 마커에 마우스를 올리면 인포윈도우 표시
+                    kakao.maps.event.addListener(marker, 'mouseover', function () {
+                        infowindow.setContent(`<div style="padding:5px;font-size:14px;">${gym.place_name}</div>`);
+                        infowindow.open(map, marker);
+                    });
+
+                    // 마커에서 마우스를 떼면 인포윈도우 닫기
+                    kakao.maps.event.addListener(marker, 'mouseout', function () {
+                        infowindow.close();
+                    });
+
+                    markers.push(marker);
+                    overlays.push(customOverlay);
+                });
+                map.setBounds(bounds); // 해당 경계로 맵 이동
+                console.log("맵 이동 성공");
+            })
+            .catch(error => console.error("API 요청 실패:", error));
+    }
+
+    // 커스텀 오버레이 닫기
+    function closeOverlay() {
+        overlays.forEach(overlay => overlay.setMap(null));
+    }
+
+    function searchGym() {
+        // 입력값 받아오기
+        let keyword = document.getElementById('searchKeyword').value.trim();
+        let geocoder = new kakao.maps.services.Geocoder();
+
+        // 입력값 없으면 현위치 주변 헬스장 조회
+        if (keyword === "") {
+            initMap();
+        }
+
+        geocoder.addressSearch(keyword, function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                // 좌표 변환 가능하면 좌표 전달해서 좌표 기반 조회
+                let lat = result[0].y;
+                let lng = result[0].x;
+<!--                map.setCenter(new kakao.maps.LatLng(lat, lng));-->
+                getGyms(lat, lng);
+            } else {
+                // 좌표 변환 못 하면 키워드 전달해서 키워드 기반 조회
+                getGyms(null, null, keyword);
+            }
+        });
+    }
+
+    // Enter만 눌러도 검색되도록 하는 기능
+    document.getElementById("searchKeyword").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // 기본 동작 방지 (폼 제출 X)
+            searchGym();
+        }
+    });
+
+    // 실행
+    window.onload = initMap;
+</script>
 </body>
 </html>

@@ -2,6 +2,9 @@
 <head>
     <meta charset="utf-8">
     <title>GymNaWa</title>
+    <script type="text/javascript" th:src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fc8900e906375cfbf4a437afdf395108&libraries=services"></script>
+    <!-- axios CDN 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         /* 상단 영역 스타일 */
         #header {
@@ -123,9 +126,7 @@
 <!-- 지도를 표시할 div 입니다 -->
 <div id="map" style="width:100%;height:680px;"></div>
 
-<script type="text/javascript" th:src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fc8900e906375cfbf4a437afdf395108&libraries=services"></script>
-<!-- axios CDN 추가 -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
 <script>
     let map;
@@ -151,6 +152,7 @@
 
     // 백엔드에 헬스장 정보 요청
     function getGyms(lat, lng, keyword = "") {
+        alert("getGyms 함수 진입");
         const url = new URL('http://localhost:8080/api/gyms');
         let params = new URLSearchParams(); // URL 파라미터 담는 JavaScript 내장 객체
 

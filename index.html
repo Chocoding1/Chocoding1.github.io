@@ -165,7 +165,6 @@
         axios.get(url, { params }) // 백엔드로 요청
             .then(response => {
                 const data = response.data;
-                console.log("API 응답 데이터:", data);
 
                 markers.forEach(marker => marker.setMap(null)); // 기존 마커 제거
                 overlays.forEach(overlay => overlay.setMap(null)); // 기존 오버레이 제거
@@ -208,7 +207,7 @@
                                             <a href="${gym.place_url}" target="_blank" class="link">홈페이지 방문</a>
                                         </div>
                                         <div>
-                                            <a href="/gymtrainer/${gym.id}/trainers?placeName=${encodeURIComponent(gym.place_name)}" target="_blank" class="link">트레이너 목록</a>
+                                            <a href="http://localhost:8080/gymtrainer/${gym.id}/trainers?placeName=${encodeURIComponent(gym.place_name)}" target="_blank" class="link">트레이너 목록</a>
                                         </div>
                                     </div>
                                 </div>
@@ -245,7 +244,6 @@
                 });
 
                 map.setBounds(bounds); // 해당 경계로 맵 이동
-                alert("맵 이동 성공");
             })
             .catch(error => {
                 alert("API 요청 실패:", error)

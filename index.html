@@ -165,6 +165,7 @@
         alert("axios 요청 직전");
         axios.get(url, { params }) // 백엔드로 요청
             .then(response => {
+                alert("정상 요청 완료");
                 const data = response.data;
                 console.log("API 응답 데이터:", data);
                 alert("API 응답 데이터:" + data)
@@ -183,7 +184,7 @@
                 const filteredGyms = data.data.documents.filter(gym =>
                     gym.category_name.includes("헬스클럽")
                 );
-                console.log("filtering 데이터: ", filteredGyms);
+                alert("filtering 데이터: ", filteredGyms);
 
                 filteredGyms.forEach(gym => {
                     let markerPosition = new kakao.maps.LatLng(gym.y, gym.x); // 마커 위치
@@ -193,7 +194,7 @@
                         map: map,
                         clickable: true
                     });
-                    console.log("마커 생성 성공");
+                    alert("마커 생성 성공");
 
                     // 마커 좌표를 경계에 포함
                     bounds.extend(markerPosition);
@@ -247,10 +248,11 @@
                     markers.push(marker);
                     overlays.push(customOverlay);
                 });
+
                 map.setBounds(bounds); // 해당 경계로 맵 이동
-                console.log("맵 이동 성공");
+                alert("맵 이동 성공");
             })
-            .catch(error => console.error("API 요청 실패:", error));
+            .catch(error => alert("API 요청 실패:", error));
     }
 
     // 커스텀 오버레이 닫기

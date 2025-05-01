@@ -252,7 +252,10 @@
                 map.setBounds(bounds); // 해당 경계로 맵 이동
                 alert("맵 이동 성공");
             })
-            .catch(error => alert("API 요청 실패:", error));
+            .catch(error => {
+                alert("API 요청 실패:", error)
+                alert("에러 메시지 : ", error.response?.data)
+            });
     }
 
     // 커스텀 오버레이 닫기

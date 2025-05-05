@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
             } catch (reissueError) {
                 // 재발급 실패하면 (ex: refreshToken 만료)
                 console.error("토큰 재발급 실패", reissueError);
-                window.location.href = '/members/login'; // 로그인 페이지로 이동
+                window.location.href = '/api/members/login'; // 로그인 페이지로 이동
                 return Promise.reject(reissueError);
             }
         }

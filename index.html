@@ -113,7 +113,25 @@
 <div id="header">
     <h1>주변 헬스장을 탐색해보세요!</h1>
     <div class="buttons">
+        <!-- 로그인 상태인 경우: 회원 정보 표시 -->
+        <span id="logged-in" style="display: none;">
+            <span class="welcome-message" id="welcome-message">로그인 사용자 이름</span>
+            <span id="trainer-buttons" style="display: none;">
+                <button id="mypage-trainer">마이페이지 (트레이너)</button>
+            </span>
+            <span id="non-trainer-buttons" style="display: none;">
+                <button id="mypage-non-trainer">마이페이지</button>
+            </span>
+            <form id="logout-form" style="display: inline;">
+                <button type="submit">로그아웃</button>
+            </form>
+        </span>
 
+        <!-- 로그인 상태가 아닌 경우: 로그인 & 회원가입 버튼 표시 -->
+        <span id="not-logged-in" style="display: none;">
+            <button id="signup-button">회원가입</button>
+            <button id="login-button">로그인</button>
+        </span>
     </div>
 </div>
 
@@ -126,7 +144,59 @@
 <!-- 지도를 표시할 div 입니다 -->
 <div id="map" style="width:100%;height:680px;"></div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const accessToken = localStorage.getItem('accessToken');
 
+        if (accessToken) {
+            // 1. 로그인 상태인 경우
+            // 서버에서 사용자 정보를 가져오기
+            axios.get('/api/members/me', { headers: { 'Authorization': `Bearer ${accessToken}` } })
+                .then(response => {
+                    const member = response.data; // 서버에서 사용자 정보 가져오기
+
+                    // 2. 환영 메시지 & 마이페이지 버튼 세팅
+                    document.getElementById('logged-in').style.display = 'inline'; // 로그인된 상태로 표시
+                    document.getElementById('welcome-message').innerText = `환영합니다. ${member.name}님!`;
+
+                    // 3. 트레이너 여부에 따른 버튼 보이기
+                    if (member.isTrainer) {
+                        document.getElementById('trainer-buttons').style.display = 'inline'; // 트레이너일 경우 마이페이지 버튼
+                    } else {
+                        document.getElementById('non-trainer-buttons').style.display = 'inline'; // 일반 회원일 경우 마이페이지 버튼
+                    }
+
+                    // 4. 로그아웃 버튼 활성화
+                    document.getElementById('logout-form').style.display = 'inline';
+
+                    // 마이페이지 링크 설정
+                    document.getElementById('mypage-trainer').onclick = () => location.href = `/member/t/${member.id}/mypage`;
+                    document.getElementById('mypage-non-trainer').onclick = () => location.href = `/member/n/${member.id}/mypage`;
+
+                    // 로그아웃 기능
+                    document.getElementById('logout-form').onsubmit = (e) => {
+                        e.preventDefault();
+                        // 로그아웃 처리
+                        localStorage.removeItem('accessToken');
+                        location.href = '/login'; // 로그아웃 후 로그인 페이지로 이동
+                    };
+                })
+                .catch(error => {
+                    console.error('사용자 정보 가져오기 실패', error);
+                });
+
+        } else {
+            // 2. 로그인 상태가 아닌 경우
+            document.getElementById('not-logged-in').style.display = 'inline'; // 로그인 안된 상태로 표시
+
+            // 로그인 버튼 클릭 시 로그인 페이지로 이동
+            document.getElementById('login-button').onclick = () => location.href = '/login';
+
+            // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
+            document.getElementById('signup-button').onclick = () => location.href = '/member/add/select';
+        }
+    });
+</script>
 
 <script>
     let map;
@@ -207,7 +277,7 @@
                                             <a href="${gym.place_url}" target="_blank" class="link">홈페이지 방문</a>
                                         </div>
                                         <div>
-                                            <a href="http://localhost:8080/gymtrainer/${gym.id}/trainers?placeName=${encodeURIComponent(gym.place_name)}" target="_blank" class="link">트레이너 목록</a>
+                                            <a href="http://localhost:8080/api/gymtrainer/${gym.id}/trainers?placeName=${encodeURIComponent(gym.place_name)}" target="_blank" class="link">트레이너 목록</a>
                                         </div>
                                     </div>
                                 </div>

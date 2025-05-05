@@ -155,7 +155,7 @@
         }).open();
     }
 
-    <!-- 입력된 이메일로 인증코드 발송 함수 -->
+    // 입력된 이메일로 인증코드 발송 함수
     function sendEmailCode() {
         const email = document.getElementById('email').value;
         if (!email) {
@@ -182,7 +182,7 @@
         .catch(error => console.error('Error:', error));
     }
 
-    <!-- 인증코드 검증 함수 -->
+    // 인증코드 검증 함수
     function verifyEmailCode() {
         const email = document.getElementById('email').value;
         const code = document.getElementById('code').value;

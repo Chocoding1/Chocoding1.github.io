@@ -108,10 +108,10 @@
 
         try {
             // 1. 로그인 요청
-            await axios.post('/login', { email, password }, { withCredentials: true });
+            await axios.post('http://localhost:8080/login', { email, password }, { withCredentials: true });
 
             // 2. 로그인 성공하면, 바로 /reissue 호출해서 AccessToken 받아오기
-            const reissueResponse = await axios.post('/reissue', {}, { withCredentials: true });
+            const reissueResponse = await axios.post('http://localhost:8080/reissue', {}, { withCredentials: true });
 
             alert("/reissue 탈출");
             // 3. 서버에서 Authorization 헤더로 받은 AccessToken을 받아서 localStorage에 저장

@@ -90,7 +90,7 @@
                     </form>
                 </div>
                 <div class="card-footer text-center">
-                    <small>이미 계정이 있으신가요? <a href="/static/login.html" class="text-primary">로그인</a></small>
+                    <small>이미 계정이 있으신가요? <a href="/pages/member/loginMemberForm.html" class="text-primary">로그인</a></small>
                 </div>
             </div>
         </div>
@@ -163,7 +163,7 @@
             return;
         }
         // 서버에 인증 코드 요청
-        fetch('/api/email/send-code', {
+        fetch('http://localhost:8080/api/email/send-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -191,7 +191,7 @@
             return;
         }
         // 서버에 인증 코드 확인 요청
-        fetch('/api/email/verify-code', {
+        fetch('http://localhost:8080/api/email/verify-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -233,11 +233,11 @@
       // 기존 에러 메시지 초기화
       clearErrors();
 
-      axios.post('/api/normembers', formData)
+      axios.post('http://localhost:8080/api/normembers', formData)
         .then(response => {
           // 서버에서 리디렉션이 아닌 JSON 응답을 주도록 바꾸는 게 이상적
           alert('회원가입이 완료되었습니다!');
-          window.location.href = '/api/members/login';  // 수동 리디렉션
+          window.location.href = '/pages/member/loginMemberForm.html';  // 수동 리디렉션
         })
         .catch(error => {
           if (error.response && error.response.data && error.response.data.data) {

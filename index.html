@@ -178,7 +178,7 @@
                         e.preventDefault();
                         // 로그아웃 처리
                         localStorage.removeItem('accessToken');
-                        location.href = 'member/loginMemberForm.html'; // 로그아웃 후 로그인 페이지로 이동
+                        location.href = '/member/loginMemberForm.html'; // 로그아웃 후 로그인 페이지로 이동
                     };
                 })
                 .catch(error => {
@@ -190,10 +190,10 @@
             document.getElementById('not-logged-in').style.display = 'inline'; // 로그인 안된 상태로 표시
 
             // 로그인 버튼 클릭 시 로그인 페이지로 이동
-            document.getElementById('login-button').onclick = () => location.href = 'member/loginMemberForm.html';
+            document.getElementById('login-button').onclick = () => location.href = '/member/loginMemberForm.html';
 
             // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
-            document.getElementById('signup-button').onclick = () => location.href = 'member/memberTypeSelectForm.html';
+            document.getElementById('signup-button').onclick = () => location.href = '/member/memberTypeSelectForm.html';
         }
     });
 </script>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .menu {
+            list-style: none;
+            padding: 0;
+        }
+        .menu-item {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #000;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .menu-item.text-danger {
+            color: #dc3545;
+        }
+        .section-divider {
+            border-top: 2px solid #ddd;
+            margin: 30px 0;
+        }
+        .gym-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3">
+            <ul class="menu">
+                <li>
+                    <form th:action="@{/member/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="menu-item text-danger">로그아웃</button>
+                    </form>
+                </li>
+                <li>
+                    <form th:action="@{/member/delete-account}" method="post" style="margin: 0;">
+                        <button type="submit" class="menu-item text-danger">회원 탈퇴</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Content -->
+        <div class="col-md-9">
+            <!-- Profile Section -->
+            <div id="profile" th:object="${trainerViewDto}">
+                <h3 class="mb-3">프로필</h3>
+                <div class="mb-2"><strong>이름:</strong> <span th:text="*{name}">name</span></div>
+                <div class="mb-2"><strong>성별:</strong> <span th:text="*{gender}">gender</span></div>
+                <div class="mb-2"><strong>이메일:</strong> <span th:text="*{email}">email</span></div>
+                <div class="mb-2"><strong>비밀번호:</strong> <span th:text="*{password}">password</span></div>
+                <div class="mb-2">
+                    <h4>주소</h4>
+                    <div><strong>우편번호:</strong> <span th:text="*{address.zoneCode}">zoneCode</span></div>
+                    <div><strong>주소:</strong> <span th:text="*{address.address}">address</span></div>
+                    <div><strong>건물명:</strong> <span th:text="*{address.buildingName}">buildingName</span></div>
+                    <div><strong>상세주소:</strong> <span th:text="*{address.detailAddress}">detailAddress</span></div>
+                </div>
+                <a th:href="@{|/member/t/*{id}/edit|}" class="btn btn-primary">정보 수정</a>
+            </div>
+
+            <hr class="section-divider"> <!-- 구분선 -->
+
+            <!-- 내가 소속된 헬스장 Section -->
+            <div id="gyms" class="mt-5">
+                <div class="gym-header">
+                    <h3 class="mb-3">내가 소속된 헬스장</h3>
+                    <a href="/gymtrainer/register" class="btn btn-success">소속 헬스장 등록</a>
+                </div>
+<!--
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="gym : ${trainerViewDto.gyms}">
+                        <strong>헬스장 이름:</strong> <span th:text="${gym.name}">헬스장 이름</span> |
+                        <strong>주소:</strong> <span th:text="${gym.address}">주소</span>
+                    </li>
+                </ul>
+                <p th:if="${#lists.isEmpty(trainerViewDto.gyms)}">소속된 헬스장이 없습니다.</p>
+-->
+            </div>
+
+            <hr class="section-divider"> <!-- 구분선 -->
+
+            <!-- 나에게 달린 리뷰 Section -->
+            <div id="reviews" class="mt-5">
+                <h3 class="mb-3">나에게 달린 리뷰</h3>
+<!--
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="review : ${trainerViewDto.reviews}">
+                        <strong>작성자:</strong> <span th:text="${review.author}">작성자</span> |
+                        <strong>내용:</strong> <span th:text="${review.content}">내용</span> |
+                        <strong>평점:</strong> <span th:text="${review.rating}">평점</span>
+                    </li>
+                </ul>
+                <p th:if="${#lists.isEmpty(trainerViewDto.reviews)}">아직 받은 리뷰가 없습니다.</p>
+-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -115,6 +115,7 @@
             );
             alert("/login 탈출")
 
+            console.log(loginResponse.headers);
             const refreshToken = loginResponse.headers['refresh'];
             alert("refresh token 추출");
             alert(refreshToken);

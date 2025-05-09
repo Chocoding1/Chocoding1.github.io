@@ -123,7 +123,7 @@
             alert(refreshToken);
 
             // 2. 로그인 성공하면, 바로 /reissue 호출해서 AccessToken 받아오기
-            const reissueResponse = await axios.post('http://localhost:8080/reissue', {
+            const reissueResponse = await axios.post('http://localhost:8080/reissue', {}, {
                 headers: {
                    'Authorization-Refresh': refreshToken
                   },

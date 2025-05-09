@@ -120,9 +120,9 @@
             alert("reissue 접근 전");
             // 2. 로그인 성공하면, 바로 /reissue 호출해서 AccessToken 받아오기
             const reissueResponse = await axios.get('http://localhost:8080/reissue', {
-                headers: {
-                    'Authorization-Refresh': refreshToken
-                  },
+                // headers: {
+                   //  'Authorization-Refresh': refreshToken
+                  // },
             },{ withCredentials: true });
 
             alert("/reissue 탈출");

@@ -120,7 +120,6 @@
                 alert("서버에서 refresh token을 받지 못했습니다.");
                 throw new Error("서버에서 refresh token을 받지 못했습니다.");
             }
-            alert(refreshToken);
 
             // 2. 로그인 성공하면, 바로 /reissue 호출해서 AccessToken 받아오기
             const reissueResponse = await axios.post('http://localhost:8080/reissue', {}, {
@@ -134,10 +133,8 @@
             const accessToken = reissueResponse.headers["authorization"].replace("Bearer ", "");
             localStorage.setItem('accessToken', accessToken);
 
-            alert("refresh token 저장 전");
             const realRefreshToken = reissueResponse.headers["authorization-refresh"];
             localStorage.setItem('refreshToken', realRefreshToken);
-            alert("refresh token 저장 후");
 
             // 4. /api/로 리다이렉트
             window.location.href = "/";

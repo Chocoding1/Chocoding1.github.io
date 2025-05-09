@@ -114,7 +114,6 @@
                 { withCredentials: true }
             );
 
-            console.log(loginResponse.headers);
             const refreshToken = loginResponse.headers['refresh'];
 
             if (!refreshToken) {
@@ -134,8 +133,10 @@
             const accessToken = reissueResponse.headers["authorization"].replace("Bearer ", "");
             localStorage.setItem('accessToken', accessToken);
 
-            refreshToken = reissueResponse.headers["refresh"];
-            localStorage.setItem('refreshToken', refreshToken);
+            alert("refresh token 저장 전");
+            const realRefreshToken = reissueResponse.headers["refresh"];
+            localStorage.setItem('refreshToken', realRefreshToken);
+            alert("refresh token 저장 후");
 
             // 4. /api/로 리다이렉트
             window.location.href = "/";

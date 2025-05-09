@@ -179,6 +179,7 @@
                         e.preventDefault();
                         // 로그아웃 처리
                         localStorage.removeItem('accessToken');
+                        localStorage.removeItem('refreshToken');
                         location.href = '/'; // 로그아웃 후 홈 화면으로 이동
                     };
                 })

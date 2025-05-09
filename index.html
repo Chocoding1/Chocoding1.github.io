@@ -151,42 +151,7 @@
         if (accessToken) {
             // 1. 로그인 상태인 경우
             // 서버에서 사용자 정보를 가져오기
-            axios.get('http://localhost:8080/api/members/info', { headers: { 'Authorization': `Bearer ${accessToken}` } })
-                .then(response => {
-                    const member = response.data.data; // 서버에서 사용자 정보 가져오기
-                    console.log(member);
-
-                    // 2. 환영 메시지 & 마이페이지 버튼 세팅
-                    document.getElementById('logged-in').style.display = 'inline'; // 로그인된 상태로 표시
-                    document.getElementById('welcome-message').innerText = `환영합니다. ${member.name}님!`;
-
-                    // 3. 트레이너 여부에 따른 버튼 보이기
-                    if (member.isTrainer) {
-                        document.getElementById('trainer-buttons').style.display = 'inline'; // 트레이너일 경우 마이페이지 버튼
-                    } else {
-                        document.getElementById('non-trainer-buttons').style.display = 'inline'; // 일반 회원일 경우 마이페이지 버튼
-                    }
-
-                    // 4. 로그아웃 버튼 활성화
-                    document.getElementById('logout-form').style.display = 'inline';
-
-                    // 마이페이지 링크 설정
-                    document.getElementById('mypage-trainer').onclick = () => location.href = `/member/t/${member.id}/mypage`;
-                    document.getElementById('mypage-non-trainer').onclick = () => location.href = `/member/n/${member.id}/mypage`;
-
-                    // 로그아웃 기능
-                    document.getElementById('logout-form').onsubmit = (e) => {
-                        e.preventDefault();
-                        // 로그아웃 처리
-                        localStorage.removeItem('accessToken');
-                        localStorage.removeItem('refreshToken');
-                        location.href = '/'; // 로그아웃 후 홈 화면으로 이동
-                    };
-                })
-                .catch(error => {
-                    console.error('사용자 정보 가져오기 실패', error);
-                });
-
+            loadUserInfo(accessToken);
         } else {
             // 2. 로그인 상태가 아닌 경우
             document.getElementById('not-logged-in').style.display = 'inline'; // 로그인 안 된 상태로 표시
@@ -198,6 +163,76 @@
             document.getElementById('signup-button').onclick = () => location.href = '/pages/member/memberTypeSelectForm.html';
         }
     });
+
+    async function loadUserInfo(accessToken) {
+        try {
+            const response = await axios.get('http://localhost:8080/api/members/info', {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+    
+            const member = response.data.data;
+            console.log(member);
+    
+            // 로그인 시, 버튼 렌더링
+            renderUserUI(member);
+            // 로그아웃 버튼 활성화
+            const refreshToken = localStorage.getItem('refreshToken')
+            setupLogout(member, accessToken, refreshToken);
+    
+        } catch (error) {
+            console.error('사용자 정보 가져오기 실패', error);
+            // 토큰 만료 등의 상황에 따라 추가 처리 가능
+        }
+    }
+
+    function renderUserUI(member) {
+        // 2. 환영 메시지 & 마이페이지 버튼 세팅
+        document.getElementById('logged-in').style.display = 'inline';
+        document.getElementById('welcome-message').innerText = `환영합니다. ${member.name}님!`;
+    
+        // 3. 트레이너 여부에 따른 버튼 보이기
+        if (member.isTrainer) {
+            document.getElementById('trainer-buttons').style.display = 'inline'; // 트레이너일 경우 마이페이지 버튼
+        } else {
+            document.getElementById('non-trainer-buttons').style.display = 'inline'; // 일반 회원일 경우 마이페이지 버튼
+        }
+    
+        // 마이페이지 링크 설정
+        document.getElementById('mypage-trainer').onclick = () =>
+            location.href = `/member/t/${member.id}/mypage`;
+    
+        document.getElementById('mypage-non-trainer').onclick = () =>
+            location.href = `/member/n/${member.id}/mypage`;
+    
+        // 4. 로그아웃 버튼 활성화
+        document.getElementById('logout-form').style.display = 'inline';
+    }
+
+    function setupLogout(member, accessToken, refreshToken) {
+        document.getElementById('logout-form').onsubmit = async (e) => {
+            e.preventDefault();
+    
+            try {
+                // 서버에 로그아웃 요청
+                await axios.post('http://localhost:8080/logout', {}, {
+                    headers: {
+                        'Authorization-Refresh': refreshToken
+                    },
+                    withCredentials: true
+                });
+            } catch (error) {
+                console.error('서버 로그아웃 실패:', error);
+            }
+    
+            // 클라이언트에서 토큰 제거
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+    
+            location.href = '/'; // 홈으로 이동
+        };
+    }
 </script>
 
 <script>

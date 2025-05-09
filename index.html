@@ -153,7 +153,7 @@
             // 서버에서 사용자 정보를 가져오기
             axios.get('http://localhost:8080/api/members/info', { headers: { 'Authorization': `Bearer ${accessToken}` } })
                 .then(response => {
-                    const member = response.data; // 서버에서 사용자 정보 가져오기
+                    const member = response.data.data; // 서버에서 사용자 정보 가져오기
                     console.log(member);
 
                     // 2. 환영 메시지 & 마이페이지 버튼 세팅
@@ -179,7 +179,7 @@
                         e.preventDefault();
                         // 로그아웃 처리
                         localStorage.removeItem('accessToken');
-                        location.href = '/pages/member/loginMemberForm.html'; // 로그아웃 후 로그인 페이지로 이동
+                        location.href = '/'; // 로그아웃 후 홈 화면으로 이동
                     };
                 })
                 .catch(error => {

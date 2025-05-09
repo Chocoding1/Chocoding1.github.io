@@ -115,7 +115,7 @@
             );
             alert("/login 탈출")
 
-            const refreshToken = loginResponse.headers["refresh-token"];
+            const refreshToken = loginResponse.headers["Refresh-Token"];
             alert("refresh token 추출");
 
             if (!refreshToken) {
@@ -132,7 +132,7 @@
                   withCredentials: true
             });
             alert("/reissue 탈출");
-            
+
             // 3. 서버에서 Authorization 헤더로 받은 AccessToken을 받아서 localStorage에 저장
             const accessToken = reissueResponse.headers["authorization"].replace("Bearer ", "");
             alert("accesstoken 추출");

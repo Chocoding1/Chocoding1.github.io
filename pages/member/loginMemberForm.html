@@ -137,7 +137,7 @@
             localStorage.setItem('refreshToken', realRefreshToken);
 
             // 4. /api/로 리다이렉트
-            window.location.href = "/";
+            location.href = "/";
 
         } catch(error) {
               if (error.response && error.response.data && error.response.data.data) {

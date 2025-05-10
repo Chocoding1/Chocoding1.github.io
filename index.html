@@ -153,14 +153,40 @@
             // 서버에서 사용자 정보를 가져오기
             loadUserInfo(accessToken);
         } else {
-            // 2. 로그인 상태가 아닌 경우
-            document.getElementById('not-logged-in').style.display = 'inline'; // 로그인 안 된 상태로 표시
+            // 소셜 로그인의 경우 RT만 가지고 오기 때문에 서버에 /reissue 요청
+            (async () => {
+                const params = new URLSearchParams(window.location.search);
+                const refreshToken = params.get("refreshToken");
 
-            // 로그인 버튼 클릭 시 로그인 페이지로 이동
-            document.getElementById('login-button').onclick = () => location.href = '/pages/member/loginMemberForm.html';
+                try {
+                    const reissueResponse = await axios.post('http://localhost:8080/reissue', {}, {
+                        headers: {
+                        'Authorization-Refresh': refreshToken
+                        },
+                        withCredentials: true
+                    });
 
-            // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
-            document.getElementById('signup-button').onclick = () => location.href = '/pages/member/memberTypeSelectForm.html';
+                    const realAccessToken = reissueResponse.headers['authorization']?.replace("Bearer ", "");
+                    const realRefreshToken = reissueResponse.headers['authorization-refresh'];
+
+                    if (realAccessToken) {
+                        localStorage.setItem('accessToken', realAccessToken);
+                        localStorage.setItem('refreshToken', realRefreshToken);
+                        loadUserInfo(realAccessToken);
+                    } else {
+                        // 2. 로그인 상태가 아닌 경우
+                        document.getElementById('not-logged-in').style.display = 'inline'; // 로그인 안 된 상태로 표시
+
+                        // 로그인 버튼 클릭 시 로그인 페이지로 이동
+                        document.getElementById('login-button').onclick = () => location.href = '/pages/member/loginMemberForm.html';
+
+                        // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
+                        document.getElementById('signup-button').onclick = () => location.href = '/pages/member/memberTypeSelectForm.html';
+                    }
+                } catch (error) {
+                    console.error("토큰 발급 과정 중 오류 발생: ", error);
+                }
+            })();
         }
     });
 

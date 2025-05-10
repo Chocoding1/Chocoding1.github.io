@@ -157,6 +157,7 @@
             (async () => {
                 const params = new URLSearchParams(window.location.search);
                 const refreshToken = params.get("refreshToken");
+                alert(refreshToken);
 
                 try {
                     const reissueResponse = await axios.post('http://localhost:8080/reissue', {}, {

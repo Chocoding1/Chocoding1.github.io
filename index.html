@@ -182,6 +182,8 @@
                             localStorage.setItem('accessToken', realAccessToken);
                             localStorage.setItem('refreshToken', realRefreshToken);
                             loadUserInfo(realAccessToken);
+                        } else {
+                            console.warn('refresh token is null');
                         }
                     } catch (error) {
                         console.error("토큰 발급 과정 중 오류 발생: ", error);

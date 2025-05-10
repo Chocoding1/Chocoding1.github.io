@@ -191,6 +191,7 @@
                 }
             })();
         }
+        location.href = "/"; // 홈으로 리다이렉트(url 파라미터에 존재하는 RT 제거를 위해)
     });
 
     async function loadUserInfo(accessToken) {

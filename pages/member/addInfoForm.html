@@ -155,7 +155,6 @@
                 if (realAccessToken) {
                     localStorage.setItem('accessToken', realAccessToken);
                     localStorage.setItem('refreshToken', realRefreshToken);
-                    loadUserInfo(realAccessToken);
                 } else {
                     alert('refresh token is null');
                 }

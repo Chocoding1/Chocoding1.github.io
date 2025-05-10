@@ -181,7 +181,7 @@
                         if (realAccessToken) {
                             localStorage.setItem('accessToken', realAccessToken);
                             localStorage.setItem('refreshToken', realRefreshToken);
-                            loadUserInfo(realAccessToken);
+                            location.href = "/"; // 홈으로 리다이렉트(url 파라미터에 존재하는 RT 제거를 위해)
                         } else {
                             console.warn('refresh token is null');
                         }
@@ -191,7 +191,6 @@
                 }
             })();
         }
-        location.href = "/"; // 홈으로 리다이렉트(url 파라미터에 존재하는 RT 제거를 위해)
     });
 
     async function loadUserInfo(accessToken) {

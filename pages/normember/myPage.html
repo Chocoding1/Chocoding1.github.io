@@ -108,7 +108,7 @@
   document.addEventListener('DOMContentLoaded', async () => {
     try {
         const userId = localStorage.getItem('userId');
-        const res = await axiosInstance.get('http://localhost:8080/api/normembers/${userId}'); // API 엔드포인트는 실제 백엔드에 맞게 수정하세요
+        const res = await axiosInstance.get(`http://localhost:8080/api/normembers/${userId}`); // API 엔드포인트는 실제 백엔드에 맞게 수정하세요
         const member = res.data.data;
 
         document.getElementById('name').textContent = member.name || '-';

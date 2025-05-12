@@ -107,25 +107,26 @@
   // 페이지 로드 시 회원정보 요청
   document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const res = await axiosInstance.get('http://localhost:8080/api/members/info'); // API 엔드포인트는 실제 백엔드에 맞게 수정하세요
-      const member = res.data.data;
+        const userId = localStorage.getItem('userId');
+        const res = await axiosInstance.get('http://localhost:8080/api/normembers/${userId}'); // API 엔드포인트는 실제 백엔드에 맞게 수정하세요
+        const member = res.data.data;
 
-      document.getElementById('name').textContent = member.name || '-';
-      document.getElementById('gender').textContent = member.gender || '-';
-      document.getElementById('email').textContent = member.email || '-';
-      document.getElementById('password').textContent = '********'; // 실제 비밀번호는 절대 표시하지 마세요
+        document.getElementById('name').textContent = member.name || '-';
+        document.getElementById('gender').textContent = member.gender || '-';
+        document.getElementById('email').textContent = member.email || '-';
+        document.getElementById('password').textContent = '********'; // 실제 비밀번호는 절대 표시하지 마세요
 
-      const address = member.address || {};
-      document.getElementById('zoneCode').textContent = address.zoneCode || '-';
-      document.getElementById('address').textContent = address.address || '-';
-      document.getElementById('buildingName').textContent = address.buildingName || '-';
-      document.getElementById('detailAddress').textContent = address.detailAddress || '-';
+        const address = member.address || {};
+        document.getElementById('zoneCode').textContent = address.zoneCode || '-';
+        document.getElementById('address').textContent = address.address || '-';
+        document.getElementById('buildingName').textContent = address.buildingName || '-';
+        document.getElementById('detailAddress').textContent = address.detailAddress || '-';
 
-    } catch (err) {
-      console.error('회원정보 가져오기 실패:', err);
-      alert('회원 정보를 불러오지 못했습니다. 로그인 상태를 확인해주세요.');
-      // location.href = '/pages/member/loginMemberForm.html'; // 로그인 페이지로 이동
-    }
+        } catch (err) {
+        console.error('회원정보 가져오기 실패:', err);
+        alert('회원 정보를 불러오지 못했습니다. 로그인 상태를 확인해주세요.');
+        // location.href = '/pages/member/loginMemberForm.html'; // 로그인 페이지로 이동
+        }
   });
 </script>
 

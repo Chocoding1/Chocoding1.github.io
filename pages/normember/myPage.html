@@ -108,7 +108,7 @@
   document.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axiosInstance.get('http://localhost:8080/api/members/info'); // API 엔드포인트는 실제 백엔드에 맞게 수정하세요
-      const data = res.data;
+      const data = res.data.data;
 
       document.getElementById('name').textContent = data.name || '-';
       document.getElementById('gender').textContent = data.gender || '-';

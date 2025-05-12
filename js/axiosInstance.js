@@ -60,4 +60,5 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-export default axiosInstance;
+// 전역 변수로 등록
+window.axiosInstance = axiosInstance;

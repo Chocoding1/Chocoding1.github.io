@@ -29,6 +29,7 @@ axiosInstance.interceptors.response.use(
         // 401 에러 + 아직 재시도 안한 경우만 처리
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true; // 재시도 표시
+            alert('axios interceptor : AT 만료');
 
             try {
                 // localStorage에서 RT 추출

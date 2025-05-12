@@ -31,11 +31,17 @@ axiosInstance.interceptors.response.use(
             originalRequest._retry = true; // 재시도 표시
 
             try {
+                // localStorage에서 RT 추출
+                const refreshToken = localStorage.getItem('refreshToken');
+
                 // /reissue 요청해서 새로운 accessToken 발급
-                const reissueResponse = await axiosInstance.post('/reissue', {});
+                const reissueResponse = await axiosInstance.post('/reissue', {}, {headers: {'Authorization-Refresh': `Bearer ${refreshToken}`}});
 
                 const newAccessToken = reissueResponse.headers['authorization'].replace("Bearer ", "");
                 localStorage.setItem('accessToken', newAccessToken);
+
+                const newRefreshToken = reissueResponse.headers['authorization-refresh'];
+                localStorage.setItem('refreshToken', newRefreshToken);
 
                 // 새 토큰으로 원래 요청 재전송
                 originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;

@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
                 const refreshToken = localStorage.getItem('refreshToken');
 
                 // /reissue 요청해서 새로운 accessToken 발급
-                const reissueResponse = await axiosInstance.post('/reissue', {}, {headers: {'Authorization-Refresh': `Bearer ${refreshToken}`}});
+                const reissueResponse = await axiosInstance.post('/reissue', {}, {headers: {'Authorization-Refresh': refreshToken}});
 
                 const newAccessToken = reissueResponse.headers['authorization'].replace("Bearer ", "");
                 localStorage.setItem('accessToken', newAccessToken);

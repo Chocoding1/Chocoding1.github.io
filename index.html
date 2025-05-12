@@ -5,6 +5,7 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fc8900e906375cfbf4a437afdf395108&libraries=services"></script>
     <!-- axios CDN 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/axiosInstance.js"></script>
     <style>
         /* 상단 영역 스타일 */
         #header {
@@ -195,11 +196,7 @@
 
     async function loadUserInfo(accessToken) {
         try {
-            const response = await axios.get('http://localhost:8080/api/members/info', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
+            const response = await axiosInstance.get('members/info');
     
             const member = response.data.data;
             console.log(member);

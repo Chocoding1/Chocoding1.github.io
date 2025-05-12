@@ -108,14 +108,14 @@
   document.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axiosInstance.get('http://localhost:8080/api/members/info'); // API 엔드포인트는 실제 백엔드에 맞게 수정하세요
-      const data = res.data.data;
+      const member = res.data.data;
 
-      document.getElementById('name').textContent = data.name || '-';
-      document.getElementById('gender').textContent = data.gender || '-';
-      document.getElementById('email').textContent = data.email || '-';
+      document.getElementById('name').textContent = member.name || '-';
+      document.getElementById('gender').textContent = member.gender || '-';
+      document.getElementById('email').textContent = member.email || '-';
       document.getElementById('password').textContent = '********'; // 실제 비밀번호는 절대 표시하지 마세요
 
-      const address = data.address || {};
+      const address = member.address || {};
       document.getElementById('zoneCode').textContent = address.zoneCode || '-';
       document.getElementById('address').textContent = address.address || '-';
       document.getElementById('buildingName').textContent = address.buildingName || '-';

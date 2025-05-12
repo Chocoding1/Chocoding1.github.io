@@ -203,6 +203,7 @@
     
             const member = response.data.data;
             console.log(member);
+            localStorage.setItem('userId', member.id); // localStorage에 회원 id 저장(다른 페이지에서 사용)
     
             // 로그인 시, 버튼 렌더링
             renderUserUI(member);

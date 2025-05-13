@@ -73,7 +73,7 @@
         };
 
         try {
-            const response = await axiosInstance.patch(`http://localhost:8080/api/normembers/${userId}`, formData);
+            const response = await axiosInstance.patch(`normembers/${userId}`, formData);
             alert('회원 정보가 성공적으로 수정되었습니다.');
             // 필요시 리디렉션 등 추가
             location.href='/pages/normember/myPage.html';

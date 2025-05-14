@@ -23,9 +23,6 @@
             <textarea id="content" class="form-control" rows="4" required></textarea>
         </div>
 
-        <!-- Hidden 트레이너 ID -->
-        <input type="hidden" name="trainerId" th:value="${trainerId}">
-
         <button type="submit" class="btn btn-primary">등록</button>
         <a href="/pages/ptmembership/ptMembershipList.html" class="btn btn-secondary">취소</a>
     </form>
@@ -45,7 +42,7 @@
         const { trainerId, trainerName } = getQueryParams();
 
         // 트레이너 이름 표시
-        document.getElementById("trainer-name").value = trainerName;
+        document.getElementById("trainerName").value = trainerName;
 
         // 폼 제출 처리
         document.getElementById("review-form").addEventListener("submit", async function (e) {

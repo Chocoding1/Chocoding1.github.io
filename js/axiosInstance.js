@@ -48,6 +48,11 @@ axiosInstance.interceptors.response.use(
                 return axiosInstance(originalRequest);
 
             } catch (reissueError) {
+                // 요청 시, redirect를 허용하지 않았으면 그냥 에러 반환
+                if (originalRequest.noRedirectOn401) {
+                    return Promise.reject(error);
+                }
+
                 // 재발급 실패하면 (ex: refreshToken 만료)
                 console.error("토큰 재발급 실패", reissueError);
                 alert('토큰 재발급 실패');

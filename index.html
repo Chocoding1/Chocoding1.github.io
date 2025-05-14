@@ -196,7 +196,11 @@
 
     async function loadUserInfo(accessToken) {
         try {
-            const response = await axiosInstance.get('members/info', { noRedirectOn401 : true });
+            const response = await axiosInstance.get('members/info', {
+                custom: {
+                    noRedirectOn401: true
+                }
+            });
     
             const member = response.data.data;
             console.log(member);

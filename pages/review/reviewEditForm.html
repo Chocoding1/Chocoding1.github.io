@@ -10,7 +10,7 @@
 <div class="container mt-5">
     <h2 class="mb-4">리뷰 수정</h2>
 
-    <form th:action method="post" th:object="${reviewEditDto}">
+    <form id="reviewEditForm">
 
         <!-- 트레이너 이름 -->
         <div class="mb-3">
@@ -24,7 +24,7 @@
             <textarea id="content" name="content" class="form-control" rows="4" required></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary">수정</button>
+        <button type="submit" class="btn btn-primary">수정</button> 
         <a href="/pages/review/reviewList.html" class="btn btn-secondary">취소</a>
     </form>
 </div>

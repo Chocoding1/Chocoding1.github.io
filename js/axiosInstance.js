@@ -26,6 +26,8 @@ axiosInstance.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
+        const noRedirect = originalRequest.custom?.noRedirectOn401;
+
         // 401 에러 + 아직 재시도 안한 경우만 처리
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true; // 재시도 표시
@@ -49,8 +51,9 @@ axiosInstance.interceptors.response.use(
 
             } catch (reissueError) {
                 // 요청 시, redirect를 허용하지 않았으면 그냥 에러 반환
-                if (originalRequest.noRedirectOn401) {
-                    return Promise.reject(error);
+                if (noRedirect) {
+                    // 홈화면처럼 리다이렉트 막기
+                    return Promise.reject(reissueError);
                 }
 
                 // 재발급 실패하면 (ex: refreshToken 만료)

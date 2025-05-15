@@ -44,7 +44,7 @@
         try {
             const userId = localStorage.getItem('userId');
 
-            const response = await axiosInstance.get(`normembers/${userId}/ptmemberships`);
+            const response = await axiosInstance.get(`trainers/${userId}/ptmemberships`);
 
             const ptList = response.data.data;
             const ptContainer = document.getElementById("pt-list");

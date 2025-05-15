@@ -44,7 +44,7 @@
     </div>
 
     <!-- 리뷰가 없을 때 -->
-    <p id="emptyMessage" class="text-muted" style="display: none;">작성한 리뷰가 없습니다.</p>
+    <p id="emptyMessage" class="text-muted" style="display: none;">작성된 리뷰가 없습니다.</p>
 </div>
 
 <script>
@@ -54,7 +54,7 @@
         const emptyMessage = document.getElementById('emptyMessage');
 
         try {
-            const response = await axiosInstance.get(`normembers/${userId}/reviews`);
+            const response = await axiosInstance.get(`trainers/${userId}/reviews`);
             const reviews = response.data.data;
 
             if (!reviews || reviews.length === 0) {

@@ -235,7 +235,7 @@
         console.log('member:', member);
         console.log('isTrainer:', member.isTrainer, typeof member.isTrainer);
         // 3. 트레이너 여부에 따른 버튼 보이기
-        if (member.isTrainer) {
+        if (member.trainer) {
             document.getElementById('trainer-buttons').style.display = 'inline'; // 트레이너일 경우 마이페이지 버튼
         } else {
             document.getElementById('non-trainer-buttons').style.display = 'inline'; // 일반 회원일 경우 마이페이지 버튼

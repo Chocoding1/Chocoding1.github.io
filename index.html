@@ -232,6 +232,7 @@
         document.getElementById('logged-in').style.display = 'inline';
         document.getElementById('welcome-message').innerText = `환영합니다. ${member.name}님!`;
     
+        console.log('isTrainer:', member.isTrainer, typeof member.isTrainer);
         // 3. 트레이너 여부에 따른 버튼 보이기
         if (member.isTrainer) {
             document.getElementById('trainer-buttons').style.display = 'inline'; // 트레이너일 경우 마이페이지 버튼

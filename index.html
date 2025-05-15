@@ -118,7 +118,7 @@
         <span id="logged-in" style="display: none;">
             <span class="welcome-message" id="welcome-message">로그인 사용자 이름</span>
             <span id="trainer-buttons" style="display: none;">
-                <button id="mypage-trainer">마이페이지 (트레이너)</button>
+                <button id="mypage-trainer">마이페이지</button>
             </span>
             <span id="non-trainer-buttons" style="display: none;">
                 <button id="mypage-non-trainer">마이페이지</button>
@@ -232,8 +232,6 @@
         document.getElementById('logged-in').style.display = 'inline';
         document.getElementById('welcome-message').innerText = `환영합니다. ${member.name}님!`;
     
-        console.log('member:', member);
-        console.log('isTrainer:', member.isTrainer, typeof member.isTrainer);
         // 3. 트레이너 여부에 따른 버튼 보이기
         if (member.trainer) {
             document.getElementById('trainer-buttons').style.display = 'inline'; // 트레이너일 경우 마이페이지 버튼

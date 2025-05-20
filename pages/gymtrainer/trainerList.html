@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>트레이너 목록</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h2 id="gym-title">헬스장 트레이너 목록</h2>
+    <ul id="gym-info"></ul>
+    <hr>
+    <h3>트레이너 정보</h3>
+    <ul id="trainer-list"></ul>
+    <a href="javascript:window.close();" class="button">창 닫기</a>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const gymId = urlParams.get('gymId');
+        const gymName = urlParams.get('gymName');
+
+        if (!gymId || !gymName) {
+            alert("필수 정보(gymId 또는 gymName)가 누락되었습니다.");
+        } else {
+            // 제목과 헬스장 이름 표시
+            document.getElementById("gym-title").innerText = `${gymName} 트레이너 목록`;
+            document.getElementById("gym-info").innerHTML = `<li><strong>${gymName}</strong></li>`;
+
+            // 서버로 트레이너 목록 요청
+            axios.get(`http://localhost:8080/api/gymtrainers/${gymId}/trainers`)
+                .then(response => {
+                    const trainers = response.data.data || [];
+                    const trainerList = document.getElementById("trainer-list");
+                    trainerList.innerHTML = '';
+
+                    trainers.forEach(trainer => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<strong>${trainer.name}</strong> (<span>${trainer.gender}</span>)`;
+                        trainerList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error("트레이너 정보 요청 실패:", error);
+                    alert("트레이너 목록을 불러오는 데 실패했습니다.");
+                });
+        }
+    </script>
+</body>
+</html>

@@ -53,7 +53,7 @@
         const res = await axiosInstance.post(`/members/${userId}/verify-password`, { password });
 
         if (res.data.success) {
-          location.href = '/pages/trainer/editMemberForm.html';
+          location.href = '/pages/trainer/editTrainerForm.html';
         } else {
           document.getElementById('error-msg').classList.remove('d-none');
         }

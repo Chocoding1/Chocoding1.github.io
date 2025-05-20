@@ -20,13 +20,10 @@
     <h2 class="mb-4">회원 정보 수정</h2>
     <form id="editForm">
 
-        <!-- Password -->
+        <!-- Password 변경 버튼 -->
         <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" id="password" name="password" class="form-control" required>
-            <div id="passwordError" class="text-danger mt-1" style="display: none;">
-                비밀번호 오류
-            </div>
+            <label class="form-label">비밀번호</label><br>
+            <button type="button" class="btn btn-outline-primary" onclick="goToChangePassword()">비밀번호 변경</button>
         </div>
 
         <!-- Name -->
@@ -66,7 +63,6 @@
 
         // 입력값 수집
         const formData = {
-            password: document.getElementById('password').value,
             name: document.getElementById('name').value,
             zoneCode: document.getElementById('zoneCode').value,
             address: document.getElementById('address').value,
@@ -85,13 +81,6 @@
             // 예시: 필드 오류 처리
             if (error.response && error.response.data && error.response.data.errors) {
                 const errors = error.response.data.data;
-                if (errors.password) {
-                    document.getElementById('passwordError').textContent = errors.password;
-                    document.getElementById('password').classList.add('field-error-border');
-                } else {
-                    document.getElementById('passwordError').textContent = '';
-                    document.getElementById('password').classList.remove('field-error-border');
-                }
                 if (errors.name) {
                     document.getElementById('nameError').textContent = errors.name;
                     document.getElementById('name').classList.add('field-error-border');
@@ -152,6 +141,10 @@
                 document.getElementById("detailAddress").focus();
             }
         }).open();
+    }
+
+    function goToChangePassword() {
+        location.href = '/pages/normember/changePasswordForm.html';
     }
 </script>
 

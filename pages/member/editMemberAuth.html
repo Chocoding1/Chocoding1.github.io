@@ -50,7 +50,7 @@
 
       try {
         const userId = localStorage.getItem('userId');
-        const res = await axiosInstance.post(`/api/members/${userId}/verify-password`, { password });
+        const res = await axiosInstance.post(`/members/${userId}/verify-password`, { password });
 
         if (res.data.success) {
           location.href = '/pages/normember/editMemberForm.html';

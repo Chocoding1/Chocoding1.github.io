@@ -9,7 +9,6 @@
     <h2 id="gym-title">헬스장 트레이너 목록</h2>
     <ul id="gym-info"></ul>
     <hr>
-    <h3>트레이너 정보</h3>
     <ul id="trainer-list"></ul>
     <a href="javascript:window.close();" class="button">창 닫기</a>
 
@@ -22,8 +21,7 @@
             alert("필수 정보(gymId 또는 gymName)가 누락되었습니다.");
         } else {
             // 제목과 헬스장 이름 표시
-            document.getElementById("gym-title").innerText = `${gymName} 트레이너 목록`;
-            document.getElementById("gym-info").innerHTML = `<li><strong>${gymName}</strong></li>`;
+            document.getElementById("gym-title").innerText = `${gymName}의 트레이너들`;
 
             // 서버로 트레이너 목록 요청
             axios.get(`http://localhost:8080/api/gymtrainers/${gymId}/trainers`)

@@ -163,7 +163,7 @@
         }
 
         // 서버에 인증 코드 요청
-        axios.post('http://localhost:8080/api/email/send-code', { email })
+        axios.post('http://localhost:8080/api/emails/send-code', { email })
         .then(response => {
             const data = response.data;
             if (data.data.success) {
@@ -189,7 +189,7 @@
         }
 
         // 서버에 인증 코드 확인 요청
-        axios.post('http://localhost:8080/api/email/verify-code', { email, code })
+        axios.post('http://localhost:8080/api/emails/verify-code', { email, code })
         .then(response => {
             const data = response.data;
             const messageElem = document.getElementById('verificationMessage');
